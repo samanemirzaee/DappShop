@@ -3,6 +3,8 @@ import { Button, Modal } from 'react-bootstrap';
 import Web3 from "web3";
 import { Abi } from "./Abi";
 import { Web3Context } from "./context";
+import axios from 'axios'
+
 
 const Connect = () => {
     const { web3States, setWeb3State } = useContext(Web3Context)
@@ -11,6 +13,10 @@ const Connect = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const [coin, setCoin] = useState({})
+
+
 
     const connectToWallet = async () => {
         let web3, contract;
@@ -23,9 +29,7 @@ const Connect = () => {
                     contract = new web3.eth.Contract(Abi, "0x16Fccd1a9572CD8a42a9B349efa87eb9a276c212")
 
                     contract.methods.owner().call({ from: accounts[0] }).then(res => {
-                        // setWeb3State({ web3Con: web3, contractCon: contract, accountCon: accounts[0], isOwner: (res??"").toLowerCase() == (accounts[0]??"").toLowerCase() })
-                        setWeb3State({ web3: web3, contract: contract, account: accounts[0],isOwner:(res??"").toLowerCase()==(accounts[0]??"").toLowerCase() })
-                   
+                        setWeb3State({ web3: web3, contract: contract, account: accounts[0], isOwner: (res ?? "").toLowerCase() == (accounts[0] ?? "").toLowerCase()})
                     })
 
                 } else {
@@ -43,8 +47,7 @@ const Connect = () => {
         let web3, contract;
         web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/');
         contract = new web3.eth.Contract(Abi, "0x16Fccd1a9572CD8a42a9B349efa87eb9a276c212")
-        // setWeb3State({ web3Con: web3, contractCon: contract, accountCon: null, isOwner: false })
-       setWeb3State({ web3: web3, contract: contract, account: null, isOwner: false })
+        setWeb3State({ web3: web3, contract: contract, account: null, isOwner: false})
 
     }
         , [])
@@ -62,7 +65,7 @@ const Connect = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <Button onClick={connectToWallet} value="success">
+            <Button onClick={connectToWallet} variant="outline-dark">
                 {account ? (account.substring(0, 4) + '...' + account.slice(-4)) : 'Connect'}
             </Button>
         </>
